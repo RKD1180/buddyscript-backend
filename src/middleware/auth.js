@@ -3,7 +3,12 @@ const User = require("../models/User");
 const { sendError } = require("../utils/response");
 
 const protect = async (req, res, next) => {
-  const token = req.cookies && req.cookies.token;
+  let token = req.cookies && req.cookies.token;
+
+  // Fallback: check Authorization header (Bearer token)
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
+    token = req.headers.authorization.split(" ")[1];
+  }
 
   if (!token) {
     return sendError(res, { statusCode: 401, message: "Not authorized, no token" });
