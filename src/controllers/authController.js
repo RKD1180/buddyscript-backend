@@ -31,9 +31,6 @@ const register = async (req, res) => {
 
     const user = await User.create({ firstName, lastName, email, password });
 
-    const token = generateToken(user._id);
-    res.cookie("token", token, cookieOptions);
-
     sendSuccess(res, {
       statusCode: 201,
       message: "User registered successfully",
@@ -44,7 +41,6 @@ const register = async (req, res) => {
           lastName: user.lastName,
           email: user.email,
         },
-        token,
       },
     });
   } catch (error) {
